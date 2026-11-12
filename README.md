@@ -1,105 +1,88 @@
-# ⚡ Claude Infinite — Dual-Engine Hybrid Proxy Architecture
+# ⚡ Claude Infinite — Multi-Account Failover Architecture for Claude Code
 
-> High-throughput reverse-proxy gateway bridging Anthropic Claude Code CLI with upstream web-tier session pools and Google Cloud Code Assist endpoints.
+> **Run the official Claude Code CLI without a paid monthly subscription. Pool your free Claude accounts for continuous, uninterrupted coding with automated rate-limit failover.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Protocol](https://img.shields.io/badge/Protocol-Anthropic%20v1%2Fmessages-green.svg)](#protocol-specification)
-[![Engine](https://img.shields.io/badge/Engine-Sonnet%205.5%20%2B%20Opus%20Flagship-purple.svg)](#architecture)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-CLI%20Compatible-green.svg)](#features)
+[![Multi-Account](https://img.shields.io/badge/Failover-Auto--Rotate-purple.svg)](#architecture)
 
 ---
 
-## 🚀 Looking for the Turnkey 1-Click Windows Starter Kit?
+## 🚀 The 1-Click Windows Starter Kit
 
-Don't want to spend hours manually configuring reverse-proxy daemons, SSL handshakes, and credential rotation scripts?
+**Tired of paying $20/month for Claude Pro just to run the Claude Code CLI?**  
+**Tired of getting locked out by strict 5-hour rate limits right in the middle of a project?**
 
-The **Turnkey Starter Kit** includes everything pre-configured and automated out-of-the-box:
-- ⚡ **1-Click Launchers:** Pre-packaged executable scripts (`RUN_FREE`, `RUN_OPUS`).
-- 💻 **Global `cc` CLI Command:** Type `cc` anywhere on your machine in any terminal or project directory.
-- 📊 **Real-Time Terminal HUD:** Live compact status card showing account health, quota, and cooldown countdowns.
-- 🔔 **Instant Alerts:** Windows 11 desktop notifications and email alerts when keys need refresh.
-- 🛠️ **Interactive Account Manager:** Visual console for adding unlimited accounts in a loop without touching JSON.
+The **Turnkey Starter Kit** gives you a pre-configured Windows package that gets you up and running in under 3 minutes:
+- ⚡ **No Terminal Setup Required:** Pre-bundled 1-click launchers (`RUN_CLAUDE_CODE_FREE.bat`).
+- 💻 **Global `cc` Command:** Launch Claude Code from any project directory by simply typing `cc`.
+- 📊 **Real-Time Terminal HUD:** Live status banner showing exactly how much quota and cooldown time remains on each account.
+- 🔔 **Desktop Alerts:** Automatic Windows notifications if an account ever needs a cookie refresh.
+- 🛠️ **Visual Account Manager:** Add, test, and manage as many free Claude accounts as you want with a simple interactive menu.
 
-👉 **[Download the 1-Click Starter Kit on Gumroad](https://daniyalz7.gumroad.com/l/claude-infinite)**
+👉 **[Get the 1-Click Starter Kit on Gumroad](https://daniyalz7.gumroad.com/l/claude-infinite)**
 
 ---
 
 ## 🏛️ System Architecture
 
-Claude Infinite implements a dual-engine protocol translation gateway that sits between client applications (Claude Code CLI, Cursor, n8n) and upstream model backends:
+Claude Infinite implements a local reverse-proxy gateway that sits between the Claude Code CLI and Anthropic's web backend:
 
 ```mermaid
 flowchart TD
-    subgraph Client["Consumer Layer"]
+    subgraph Client["Local Workspace"]
         CLI["Claude Code CLI\n(POST /v1/messages)"]
-        EXT["OpenAI SDK / Automations\n(POST /v1/chat/completions)"]
     end
 
-    subgraph Gateway["Claude Infinite Gateway Core"]
-        ROUTER{"Route Inspector\n(Opus vs Sonnet?)"}
-        POOL["Account State Machine\n(Cooldown tracking)"]
-        TRANS["SSE Protocol Transformer\n(Web Completion -> Anthropic SSE)"]
-        PROXY["Headless Proxy Gateway"]
+    subgraph Hub["Claude Infinite Gateway Core (Port 8000)"]
+        PROXY["Local FastAPI Proxy"]
+        ROUTER{"Rate Limit Catch?\n(HTTP 429)"}
+        POOL["Account State Pool\n(config.json)"]
     end
 
-    subgraph Upstream["Upstream Providers"]
-        WEB["Claude Web Backend\n(sessionKey Authentication)"]
-        AG["Google Cloud Code Assist\n(OAuth Scope: cloud-platform)"]
+    subgraph Accounts["Your Free Claude Accounts"]
+        ACC1["Account 1 (Active)"]
+        ACC2["Account 2 (Standby)"]
+        ACCN["Account N..."]
     end
 
     CLI --> PROXY
-    EXT --> PROXY
-    PROXY --> ROUTER
-    ROUTER -->|Sonnet Request| POOL
-    POOL -->|Active Account| TRANS
-    TRANS --> WEB
-    POOL -->|On RateLimit 429| AG
-    ROUTER -->|Opus Request| AG
+    PROXY --> POOL
+    POOL --> ACC1
+    ACC1 -->|Success| CLI
+    ACC1 -->|429 Rate Limit| ROUTER
+    ROUTER -->|Auto-Rotate| ACC2
+    ACC2 -->|Transparent Resume| CLI
 ```
 
 ---
 
-## 🔬 Protocol Translation Specification
+## 🔬 How It Works
 
-1. **Anthropic SSE Ingestion:**
-   Incoming requests to `/v1/messages` are parsed into a normalized state payload.
-2. **Upstream Web Dispatch:**
-   The gateway handles Cloudflare TLS fingerprint impersonation via `curl_cffi` (mimicking Chrome 131 HTTP/2 client handshakes) using persistent `sessionKey` cookies.
-3. **Stream Transformation:**
-   Anthropic's raw completion chunks are dynamically converted into standard Anthropic Messages SSE events:
-   - `message_start`
-   - `content_block_start`
-   - `content_block_delta`
-   - `message_delta`
-   - `message_stop`
-4. **Google Cloud Code Assist Bridging:**
-   For Opus or secondary Sonnet failover, requests are transformed to Google's internal Cloud AI Companion JSON-RPC schema over HTTPS.
+1. **Native Messages Protocol:** Claude Code connects to `http://localhost:8000` assuming it is communicating with the official Anthropic API.
+2. **Web-Tier Session Routing:** The proxy translates standard Anthropic Messages requests into `claude.ai` web-tier requests using browser `sessionKey` cookies.
+3. **Automated Cooldown Tracking:** When an active account approaches or hits Anthropic's free quota limit (HTTP 429), the proxy catches it in real time, places that account on a cooldown timer, and routes the current prompt to the next available account.
+4. **100% Local & Secure:** All session keys are stored locally on your machine in `config.json`. No external telemetry or cloud servers.
 
 ---
 
-## 🛠️ Manual Installation (For Advanced Engineers)
-
-> [!WARNING]
-> Manual setup requires configuring background Node.js reverse-proxy daemons, managing process lifecycles, and configuring system environment variables manually.
+## 🛠️ Manual Installation (For Advanced Developers)
 
 ### 1. Dependencies
 ```bash
-pip install fastapi uvicorn curl_cffi requests httpx
+pip install fastapi uvicorn curl_cffi requests
 npm install -g @anthropic-ai/claude-code
 ```
 
-### 2. Upstream Proxy Configuration
-To enable the Google Antigravity bridge manually, you must deploy and manage an upstream OAuth proxy daemon on port `8080` with the `cloud-platform` scope:
-```bash
-npx antigravity-claude-proxy start --strategy=hybrid
-```
+### 2. Configure Accounts
+Create a `config.json` based on `config.example.json` with your browser's `sessionKey` and Organization UUID.
 
-### 3. Run Core Gateway
+### 3. Launch Core Proxy
 ```bash
 python proxy_core.py
 ```
 
-### 4. Client Environment Injection
-In every terminal session where you run Claude Code, you must manually export the bypass headers before launching the CLI:
+### 4. Inject Environment Variables & Run
 ```bash
 export ANTHROPIC_BASE_URL=http://localhost:8000
 export ANTHROPIC_API_KEY=dummy-key-free-tier
@@ -109,4 +92,4 @@ claude --prompt-suggestions false
 ---
 
 ## 📄 License
-MIT License. Created for local developer experimentation and reverse-proxy research.
+MIT License. Created for local developer productivity and workflow continuity.

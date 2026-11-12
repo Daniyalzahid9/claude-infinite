@@ -16,7 +16,7 @@ try:
 except Exception:
     notifier = None
 
-app = FastAPI(title="Claude Infinite Hybrid Multi-Engine Bridge (Claude.ai + Antigravity)")
+app = FastAPI(title="Claude Infinite Multi-Account Failover Bridge")
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
 
@@ -176,93 +176,19 @@ def build_prompt(messages: List[Any], system: Optional[Union[str, List[Any]]] = 
     prompt_parts.append("\n\nAssistant: ")
     return "".join(prompt_parts)
 
-# ==============================================================================
-# ANTIGRAVITY ENGINE FORWARDER (OPUS + SONNET OVERFLOW ON PORT 8080)
-# ==============================================================================
-
-def ensure_antigravity_live():
-    """Checks if Antigravity proxy is listening on port 8080. If not, boots it up."""
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(0.8)
-    is_open = sock.connect_ex(("127.0.0.1", 8080)) == 0
-    sock.close()
-    if not is_open:
-        print("[*] Starting Antigravity Proxy (acc) in background on port 8080...")
-        subprocess.Popen("cmd /c \"npx -y antigravity-claude-proxy start\"", shell=True)
-        time.sleep(3.0)
-
-def forward_to_antigravity_messages(req_body: dict, stream: bool):
-    url = "http://127.0.0.1:8080/v1/messages"
-    headers = {
-        "Content-Type": "application/json",
-        "x-api-key": "dummy-key",
-        "anthropic-version": "2023-06-01"
-    }
-    try:
-        if stream:
-            def stream_gen():
-                with httpx.stream("POST", url, json=req_body, headers=headers, timeout=120.0) as resp:
-                    for line in resp.iter_lines():
-                        if line:
-                            yield f"{line}\n"
-                        else:
-                            yield "\n"
-            return StreamingResponse(stream_gen(), media_type="text/event-stream")
-        else:
-            resp = httpx.post(url, json=req_body, headers=headers, timeout=120.0)
-            return JSONResponse(status_code=resp.status_code, content=resp.json())
-    except Exception as e:
-        print(f"[!] Antigravity forward error: {e}")
-        raise HTTPException(status_code=502, detail=f"Antigravity proxy unavailable. Link Google account via LINK_GOOGLE_ACCOUNT.bat: {e}")
-
-def forward_to_antigravity_chat(req_body: dict, stream: bool):
-    url = "http://127.0.0.1:8080/v1/chat/completions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer dummy-key"
-    }
-    try:
-        if stream:
-            def stream_gen():
-                with httpx.stream("POST", url, json=req_body, headers=headers, timeout=120.0) as resp:
-                    for line in resp.iter_lines():
-                        if line:
-                            yield f"{line}\n"
-                        else:
-                            yield "\n"
-            return StreamingResponse(stream_gen(), media_type="text/event-stream")
-        else:
-            resp = httpx.post(url, json=req_body, headers=headers, timeout=120.0)
-            return JSONResponse(status_code=resp.status_code, content=resp.json())
-    except Exception as e:
-        print(f"[!] Antigravity chat forward error: {e}")
-        raise HTTPException(status_code=502, detail=f"Antigravity proxy unavailable. Link Google account via LINK_GOOGLE_ACCOUNT.bat: {e}")
-
 @app.post("/v1/messages")
 async def messages_endpoint(request: Request):
     req_body = await request.json()
-    model = req_body.get("model", "claude-3-5-sonnet-20241022")
+    model = req_body.get("model", "claude-sonnet-5-5")
     messages = req_body.get("messages", [])
     system = req_body.get("system")
     tools = req_body.get("tools")
     stream = req_body.get("stream", False)
 
-    model_lower = str(model).lower()
-    is_opus = "opus" in model_lower
-
-    # Route 1: Opus requested -> Forward directly to Antigravity
-    if is_opus:
-        print(f"\n[CLAUDE CODE CALL] Opus requested -> Routing to Antigravity Engine (Port 8080)...")
-        ensure_antigravity_live()
-        return forward_to_antigravity_messages(req_body, stream)
-
-    # Route 2: Sonnet fallback check
     acc = account_pool.get_available_account()
     now = time.time()
     if not acc or acc.get("rate_limited_until", 0) > now:
-        print(f"\n[CLAUDE CODE CALL] All claude.ai accounts on cooldown -> Falling back to Antigravity Sonnet (Port 8080)...")
-        ensure_antigravity_live()
-        return forward_to_antigravity_messages(req_body, stream)
+        raise HTTPException(status_code=429, detail="All Claude accounts in pool are currently cooling down. Add more accounts via MANAGE_ACCOUNTS.bat to scale capacity.")
 
     full_prompt = build_prompt(messages, system, tools)
     msg_id = f"msg_{uuid.uuid4().hex[:24]}"
@@ -465,20 +391,10 @@ async def chat_completions(request: Request):
     stream = body.get("stream", False)
     model = body.get("model", "claude-3-5-sonnet")
 
-    model_lower = str(model).lower()
-    is_opus = "opus" in model_lower
-
-    if is_opus:
-        print(f"\n[OPENAI CALL] Opus requested -> Routing to Antigravity Engine (Port 8080)...")
-        ensure_antigravity_live()
-        return forward_to_antigravity_chat(body, stream)
-
     acc = account_pool.get_available_account()
     now = time.time()
     if not acc or acc.get("rate_limited_until", 0) > now:
-        print(f"\n[OPENAI CALL] All claude.ai accounts on cooldown -> Fallback to Antigravity Sonnet (Port 8080)...")
-        ensure_antigravity_live()
-        return forward_to_antigravity_chat(body, stream)
+        raise HTTPException(status_code=429, detail="All Claude accounts in pool are currently cooling down.")
 
     # Separate system and chat messages
     system_parts = []
