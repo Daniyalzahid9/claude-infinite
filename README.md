@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/Protocol-Anthropic%20v1%2Fmessages-green.svg)](#protocol-specification)
-[![Engine](https://img.shields.io/badge/Engine-Sonnet%203.5%20%2B%20Opus%203-purple.svg)](#architecture)
+[![Engine](https://img.shields.io/badge/Engine-Sonnet%205.5%20%2B%20Opus%20Flagship-purple.svg)](#architecture)
 
 ---
 
