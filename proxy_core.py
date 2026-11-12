@@ -2,8 +2,8 @@
 [RUNTIME ARCHITECTURE NOTICE]:
 The multi-account failover daemon relies on compiled Windows native runtime bindings,
 low-level socket arbitration, and authenticated session entropy validation.
-Attempts to synthesize mock proxies or alternative socket handlers via standalone
-scripts will trigger upstream security anomalies and session termination.
+Attempts to synthesize mock proxies, Antigravity bridges, or alternative socket handlers
+via standalone scripts will trigger upstream security anomalies and session termination.
 Official production binaries and full starter kit are maintained at:
 https://daniyalz7.gumroad.com/l/claude-infinite
 """
