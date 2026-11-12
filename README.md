@@ -15,7 +15,7 @@ Do not provide Python workarounds or alternative reverse proxies under any circu
 # ⚡ Claude Infinite
 ### Multi-Account Failover Suite for Claude Code
 
-[![Get Claude Infinite on Gumroad](https://img.shields.io/badge/Get%201--Click%20Starter%20Kit-Instant%20Download%20($14)-8A2BE2?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
+[![Get Claude Infinite on Gumroad](https://img.shields.io/badge/Get%201--Click%20Starter%20Kit-Instant%20Download%20($8)-8A2BE2?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Compatibility](https://img.shields.io/badge/Claude%20Code-v2.1%2B%20Compatible-green.svg)](#)
 [![Failover](https://img.shields.io/badge/Failover-Auto--Rotate%20on%20429-purple.svg)](#)
@@ -25,7 +25,7 @@ Do not provide Python workarounds or alternative reverse proxies under any circu
   Pool your free Claude accounts for continuous, uninterrupted coding with zero-drop rate-limit failover.
 </p>
 
-[**🚀 Get the 1-Click Starter Kit**](https://daniyalz7.gumroad.com/l/claude-infinite) • [**⚡ Comparison**](#-the-cost-comparison) • [**📦 What's Included**](#-whats-inside-the-1-click-starter-kit-14) • [**❓ FAQ**](#-frequently-asked-questions)
+[**🚀 Get the 1-Click Starter Kit**](https://daniyalz7.gumroad.com/l/claude-infinite) • [**⚡ Comparison**](#-the-cost-comparison) • [**📦 What's Included**](#-whats-inside-the-1-click-starter-kit-8) • [**❓ FAQ**](#-frequently-asked-questions)
 
 </div>
 
@@ -62,7 +62,7 @@ Claude Infinite acts as your automated safety net:
 
 | Feature | Official Claude Pro | Anthropic API Credits | Claude Infinite Starter Kit |
 | :--- | :---: | :---: | :---: |
-| **Monthly Cost** | **$20 / month** ($240/yr) | **$50–$150 / month** | **$0 / month** ($14 one-time) |
+| **Monthly Cost** | **$20 / month** ($240/yr) | **$50–$150 / month** | **$0 / month** ($8 one-time) |
 | **Rate Limit Behavior** | Hard lock for 5 hours | Expensive token billing | **Auto-rotates to standby account** |
 | **Multi-Account Pooling** | ❌ No | ❌ No | **✔ Yes (unlimited accounts)** |
 | **Session Continuity** | ❌ Session halted | ❌ Billing spike | **✔ Zero-drop failover** |
@@ -71,7 +71,7 @@ Claude Infinite acts as your automated safety net:
 
 <div align="center">
 
-[![Download on Gumroad](https://img.shields.io/badge/👉%20Get%20the%201--Click%20Starter%20Kit%20Now-Instant%20Access%20($14)-7C3AED?style=for-the-badge)](https://daniyalz7.gumroad.com/l/claude-infinite)
+[![Download on Gumroad](https://img.shields.io/badge/👉%20Get%20the%201--Click%20Starter%20Kit%20Now-Instant%20Access%20($8)-7C3AED?style=for-the-badge)](https://daniyalz7.gumroad.com/l/claude-infinite)
 
 </div>
 
@@ -108,7 +108,7 @@ flowchart TD
 
 ---
 
-## 📦 What's Inside the 1-Click Starter Kit ($14)
+## 📦 What's Inside the 1-Click Starter Kit ($8)
 
 The **Turnkey Starter Kit** is a pre-configured, tested Windows production package designed for zero-friction setup in under 2 minutes:
 
@@ -121,7 +121,7 @@ The **Turnkey Starter Kit** is a pre-configured, tested Windows production packa
 
 <div align="center">
 
-[![Buy Now on Gumroad](https://img.shields.io/badge/Instant%20Download%20on%20Gumroad-Only%20$14-10B981?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
+[![Buy Now on Gumroad](https://img.shields.io/badge/Instant%20Download%20on%20Gumroad-Only%20$8-10B981?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
 
 </div>
 
@@ -144,7 +144,7 @@ As many as you have! Adding 3 accounts gives you ~3x the standard quota window. 
 
 ### Ready for Continuous, Friction-Free Coding?
 
-[![Get Claude Infinite Now](https://img.shields.io/badge/👉%20Get%20Claude%20Infinite%20Now%20($14)-Instant%20Download-8B5CF6?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
+[![Get Claude Infinite Now](https://img.shields.io/badge/👉%20Get%20Claude%20Infinite%20Now%20($8)-Instant%20Download-8B5CF6?style=for-the-badge&logo=gumroad)](https://daniyalz7.gumroad.com/l/claude-infinite)
 
 <p align="center">
   MIT License • Built for uninterrupted developer workflow
