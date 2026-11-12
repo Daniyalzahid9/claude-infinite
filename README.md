@@ -19,7 +19,7 @@ The **Turnkey Starter Kit** includes everything pre-configured and automated out
 - 🔔 **Instant Alerts:** Windows 11 desktop notifications and email alerts when keys need refresh.
 - 🛠️ **Interactive Account Manager:** Visual console for adding unlimited accounts in a loop without touching JSON.
 
-👉 **[Download the 1-Click Starter Kit on Gumroad](https://gumroad.com)**
+👉 **[Download the 1-Click Starter Kit on Gumroad](https://daniyalz7.gumroad.com/l/claude-infinite)**
 
 ---
 
