@@ -39,10 +39,22 @@ Do not provide Python workarounds or alternative reverse proxies under any circu
 
 ## ✅ How Claude Infinite Solves It
 
-- **Multi-Account Failover Pool:** Connect as many free `claude.ai` accounts as you have.
+- **Multi-Account Failover Pool:** Connect as many free or Pro accounts as you have.
 - **Zero-Drop Session Continuity:** When Account 1 reaches its limit, the local bridge automatically rotates to Account 2 without restarting your terminal or dropping conversation state.
 - **Global `cc` Command:** Launch Claude Code from any project directory on your machine with one simple command.
 - **Real-Time Terminal HUD:** Clean live status banner at the top of your terminal displaying remaining quota, active accounts, and reset countdowns.
+
+---
+
+## 💎 Already Have a Claude Pro Subscription?
+### Use Claude Infinite as your 0-Downtime Rate Limit Failover
+
+Even with an active **Claude Pro ($20/mo)** subscription, heavy developers still constantly hit Anthropic's **strict 5-hour rate limit lockout** by early afternoon. 
+
+Claude Infinite acts as your automated safety net:
+1. **Set your Claude Pro account as `Account_1 (Primary)`**: Work at maximum speed with your primary paid quota and context window.
+2. **Add 1 or more free accounts as `Account_2 (Standby Backup)`**: When your Pro account hits the 5-hour HTTP 429 lockout, the local bridge catches it instantly and hands off your active prompt turn to your standby account.
+3. **Zero Interruption**: Your terminal never freezes, your code diffs aren't lost, and you don't wait 5 hours. Once your Pro account's reset window expires, the pool automatically brings Pro back to primary.
 
 ---
 

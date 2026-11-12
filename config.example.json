@@ -2,10 +2,18 @@
   "api_port": 8000,
   "accounts": [
     {
-      "name": "Account_1",
-      "session_key": "YOUR_SESSION_KEY_HERE",
-      "org_uuid": "YOUR_ORG_UUID_HERE",
-      "org_name": "My Primary Account",
+      "name": "Account_1_Primary_Pro_or_Free",
+      "session_key": "YOUR_PRIMARY_SESSION_KEY_HERE",
+      "org_uuid": "YOUR_PRIMARY_ORG_UUID_HERE",
+      "org_name": "Primary Account (Claude Pro or Free)",
+      "enabled": true,
+      "rate_limited_until": 0
+    },
+    {
+      "name": "Account_2_Failover_Backup",
+      "session_key": "YOUR_BACKUP_SESSION_KEY_HERE",
+      "org_uuid": "YOUR_BACKUP_ORG_UUID_HERE",
+      "org_name": "Standby Backup Account (Auto-switches on 429)",
       "enabled": true,
       "rate_limited_until": 0
     }
